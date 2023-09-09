@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "XDtrader Signal",
+    "slug": "XDtraderSignal",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#12121C"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.watchstock.xdtradersignal",
+      "buildNumber": "7"
+    },
+    "android": {
+      "package": "com.watchstock.xdtradersignal",
+      "versionCode": 5,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#12121C"
+      }
+    },
+    "web": {
+      "favicon": "./assets/icon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "69870021-c68d-4b7c-b26d-9d1484e40e08"
+      }
+    }
+  }
+}
