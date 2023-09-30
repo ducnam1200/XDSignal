@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
 import WatchlistScreen from "../screens/WatchlistScreen";
 import PortfolioScreen from "../screens/PortfolioScreen";
-import { Entypo, FontAwesome, Foundation, MaterialIcons, Feather } from "@expo/vector-icons";
+import { Entypo, FontAwesome, AntDesign, MaterialIcons, Feather } from "@expo/vector-icons";
 import ListScreen from "../screens/ListScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { useNavigation } from "@react-navigation/native";
@@ -64,12 +64,12 @@ const BottomTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Portfolio"
+        name="Calendar"
         component={PortfolioScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, color }) => (
-            <FontAwesome name="star" size={20} color={focused ? '#fff' : '#787878'} />
+            <AntDesign name="calendar" size={20} color={focused ? '#fff' : '#787878'} />
           ),
         }}
       />

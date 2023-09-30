@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const token = "pk_01db657b7e4841ff8ef6ce7718660a0f"
+
 export const getDetailedCoinData = async (coinId) => {
   try {
     const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=false`)
@@ -8,6 +10,7 @@ export const getDetailedCoinData = async (coinId) => {
     console.log(e);
   }
 }
+
 
 export const getCoinMarketChart = async (coinId, selectedRange) => {
   try {
@@ -31,7 +34,30 @@ export const getMarketData = async (pageNumber = 1) => {
 
 export const getTrendingData = async () => {
   try {
-    const response = await axios.get(`https://api.coingecko.com/api/v3/search/trending`)
+    // const response = await axios.get(`https://api.coingecko.com/api/v3/search/trending`)
+    const response = await axios.get(`https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=${token}`)
+    return response.data;
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+export const getGainersData = async () => {
+  try {
+    // const response = await axios.get(`https://api.coingecko.com/api/v3/search/trending`)
+    const response = await axios.get(`https://cloud.iexapis.com/stable/stock/market/list/gainers?token=${token}`)
+    return response.data;
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+
+
+
+export const getLogoData = async (symbol) => {
+  try {
+    const response = await axios.get(`https://cloud.iexapis.com/stable/stock/${symbol}/logo?token=pk_f99f64267f7c496aa43f26e42786a46b`)
     return response.data;
   } catch (e) {
     console.log(e)
@@ -56,9 +82,75 @@ export const getAllCoins = async () => {
   }
 }
 
-export const getCandleChartData = async (coinId, days = 1) => {
+export const getCandleChartData = async (symbol, days = '1d') => {
   try {
-    const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}/ohlc?vs_currency=usd&days=${days}`)
+    // const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}/ohlc?vs_currency=usd&days=${days}`)
+    const response = await axios.get(`https://cloud.iexapis.com/stable/stock/${symbol}/chart/${days}?token=${token}`)
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export const postDataGlobal = async (country) => {
+  try {
+    const response = await axios.post(`https://scanner.tradingview.com/${country}/scan`,
+      country === 'vietnam'
+        ?
+        {
+          "filter": [{ "left": "type", "operation": "in_range", "right": ["stock", "dr", "fund"] }, { "left": "subtype", "operation": "in_range", "right": ["common", "foreign-issuer", "", "etf", "etf,odd", "etf,otc", "etf,cfd"] }, { "left": "is_primary", "operation": "equal", "right": true }, { "left": "active_symbol", "operation": "equal", "right": true }], "options": { "data_restrictions": "PREV_BAR", "lang": "vi" }, "markets": ["vietnam"], "symbols": { "query": { "types": [], "exchanges": ["HNX", "UPCOM"] }, "tickers": [] }, "columns": ["logoid", "name", "close", "change", "change_abs", "Recommend.All", "volume", "Value.Traded", "market_cap_basic", "price_earnings_ttm", "earnings_per_share_basic_ttm", "number_of_employees", "sector", "description", "type", "subtype", "update_mode", "pricescale", "minmov", "fractional", "minmove2", "currency", "fundamental_currency_code"], "sort": { "sortBy": "market_cap_basic", "sortOrder": "desc" }, "range": [0, 150]
+
+        }
+        : country === 'america'
+          ?
+          {
+            "filter": [{ "left": "type", "operation": "in_range", "right": ["stock", "dr", "fund"] }, { "left": "subtype", "operation": "in_range", "right": ["common", "foreign-issuer", "", "etf", "etf,odd", "etf,otc", "etf,cfd"] }, { "left": "exchange", "operation": "in_range", "right": ["NYSE", "NASDAQ", "AMEX"] }, { "left": "is_primary", "operation": "equal", "right": true }, { "left": "active_symbol", "operation": "equal", "right": true }], "options": { "data_restrictions": "PREV_BAR", "lang": "en" }, "markets": ["america"], "symbols": { "query": { "types": [], "exchanges": ["NASDAQ", "NYSE", "AMEX", "OTC"] }, "tickers": [] }, "columns": ["logoid", "name", "close", "change", "change_abs", "Recommend.All", "volume", "Value.Traded", "market_cap_basic", "price_earnings_ttm", "earnings_per_share_basic_ttm", "number_of_employees", "sector", "description", "type", "subtype", "update_mode", "pricescale", "minmov", "fractional", "minmove2", "currency", "fundamental_currency_code"], "sort": { "sortBy": "market_cap_basic", "sortOrder": "desc" }, "range": [0, 150]
+
+          }
+          : country === 'australia'
+            ?
+            {
+              "filter": [{ "left": "type", "operation": "in_range", "right": ["stock", "dr", "fund"] }, { "left": "subtype", "operation": "in_range", "right": ["common", "foreign-issuer", "", "etf", "etf,odd", "etf,otc", "etf,cfd"] }, { "left": "is_primary", "operation": "equal", "right": true }, { "left": "active_symbol", "operation": "equal", "right": true }], "options": { "lang": "en" }, "markets": ["australia"], "symbols": { "query": { "types": [], "exchanges": ["ASX"] }, "tickers": [] }, "columns": ["logoid", "name", "close", "change", "change_abs", "Recommend.All", "volume", "Value.Traded", "market_cap_basic", "price_earnings_ttm", "earnings_per_share_basic_ttm", "number_of_employees", "sector", "description", "type", "subtype", "update_mode", "pricescale", "minmov", "fractional", "minmove2", "currency", "fundamental_currency_code"], "sort": { "sortBy": "market_cap_basic", "sortOrder": "desc" }, "range": [0, 150]
+
+            }
+            : country === 'austria'
+              ?
+              {
+                "filter": [{ "left": "type", "operation": "in_range", "right": ["stock", "dr", "fund"] }, { "left": "subtype", "operation": "in_range", "right": ["common", "foreign-issuer", "", "etf", "etf,odd", "etf,otc", "etf,cfd"] }, { "left": "is_primary", "operation": "equal", "right": true }, { "left": "active_symbol", "operation": "equal", "right": true }], "options": { "data_restrictions": "PREV_BAR", "lang": "en" }, "markets": ["austria"], "symbols": { "query": { "types": [], "exchanges": ["VIE"] }, "tickers": [] }, "columns": ["logoid", "name", "close", "change", "change_abs", "Recommend.All", "volume", "Value.Traded", "market_cap_basic", "price_earnings_ttm", "earnings_per_share_basic_ttm", "number_of_employees", "sector", "description", "type", "subtype", "update_mode", "pricescale", "minmov", "fractional", "minmove2", "currency", "fundamental_currency_code"], "sort": { "sortBy": "market_cap_basic", "sortOrder": "desc" }, "range": [0, 150]
+
+              }
+              : country === 'canada'
+                ?
+                {
+                  "filter": [{ "left": "type", "operation": "in_range", "right": ["stock", "dr", "fund"] }, { "left": "subtype", "operation": "in_range", "right": ["common", "foreign-issuer", "", "etf", "etf,odd", "etf,otc", "etf,cfd"] }, { "left": "is_primary", "operation": "equal", "right": true }, { "left": "active_symbol", "operation": "equal", "right": true }], "options": { "data_restrictions": "PREV_BAR", "lang": "en" }, "markets": ["canada"], "symbols": { "query": { "types": [], "exchanges": ["TSX", "TSXV", "CSE", "NEO"] }, "tickers": [] }, "columns": ["logoid", "name", "close", "change", "change_abs", "Recommend.All", "volume", "Value.Traded", "market_cap_basic", "price_earnings_ttm", "earnings_per_share_basic_ttm", "number_of_employees", "sector", "description", "type", "subtype", "update_mode", "pricescale", "minmov", "fractional", "minmove2", "currency", "fundamental_currency_code"], "sort": { "sortBy": "market_cap_basic", "sortOrder": "desc" }, "range": [0, 150]
+
+                }
+                : country === 'chile'
+                  ?
+                  {
+                    "filter": [{ "left": "type", "operation": "in_range", "right": ["stock", "dr", "fund"] }, { "left": "subtype", "operation": "in_range", "right": ["common", "foreign-issuer", "", "etf", "etf,odd", "etf,otc", "etf,cfd"] }, { "left": "is_primary", "operation": "equal", "right": true }, { "left": "active_symbol", "operation": "equal", "right": true }], "options": { "data_restrictions": "PREV_BAR", "lang": "en" }, "markets": ["chile"], "symbols": { "query": { "types": [], "exchanges": ["BCS"] }, "tickers": [] }, "columns": ["logoid", "name", "close", "change", "change_abs", "Recommend.All", "volume", "Value.Traded", "market_cap_basic", "price_earnings_ttm", "earnings_per_share_basic_ttm", "number_of_employees", "sector", "description", "type", "subtype", "update_mode", "pricescale", "minmov", "fractional", "minmove2", "currency", "fundamental_currency_code"], "sort": { "sortBy": "market_cap_basic", "sortOrder": "desc" }, "range": [0, 150]
+
+                  }
+                  : country === 'china'
+                    ? {
+                      "filter": [{ "left": "type", "operation": "in_range", "right": ["stock", "dr", "fund"] }, { "left": "subtype", "operation": "in_range", "right": ["common", "foreign-issuer", "", "etf", "etf,odd", "etf,otc", "etf,cfd"] }, { "left": "is_primary", "operation": "equal", "right": true }, { "left": "active_symbol", "operation": "equal", "right": true }], "options": { "data_restrictions": "PREV_BAR", "lang": "en" }, "markets": ["china"], "symbols": { "query": { "types": [], "exchanges": ["SSE"] }, "tickers": [] }, "columns": ["logoid", "name", "close", "change", "change_abs", "Recommend.All", "volume", "Value.Traded", "market_cap_basic", "price_earnings_ttm", "earnings_per_share_basic_ttm", "number_of_employees", "sector", "description", "type", "subtype", "update_mode", "pricescale", "minmov", "fractional", "minmove2", "currency", "fundamental_currency_code"], "sort": { "sortBy": "market_cap_basic", "sortOrder": "desc" }, "range": [0, 150]
+
+                    } :
+                    {
+                      "filter": [{ "left": "type", "operation": "in_range", "right": ["stock", "dr", "fund"] }, { "left": "subtype", "operation": "in_range", "right": ["common", "foreign-issuer", "", "etf", "etf,odd", "etf,otc", "etf,cfd"] }, { "left": "is_primary", "operation": "equal", "right": true }, { "left": "active_symbol", "operation": "equal", "right": true }], "options": { "data_restrictions": "PREV_BAR", "lang": "vi" }, "markets": ["vietnam"], "symbols": { "query": { "types": [], "exchanges": ["HNX", "UPCOM"] }, "tickers": [] }, "columns": ["logoid", "name", "close", "change", "change_abs", "Recommend.All", "volume", "Value.Traded", "market_cap_basic", "price_earnings_ttm", "earnings_per_share_basic_ttm", "number_of_employees", "sector", "description", "type", "subtype", "update_mode", "pricescale", "minmov", "fractional", "minmove2", "currency", "fundamental_currency_code"], "sort": { "sortBy": "market_cap_basic", "sortOrder": "desc" }, "range": [0, 150]
+
+                    }
+
+    )
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export const getNewStory = async () => {
+  try {
+    const response = await axios.get(`https://news-headlines.tradingview.com/v2/headlines?category=base&client=overview&lang=en&tag=top_stories`)
     return response.data;
   } catch (e) {
     console.log(e);

@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, View, Text, RefreshControl, StyleSheet, ImageBackground } from "react-native";
-import { getTrendingData } from "../../services/requests";
+import { getGainersData, getTrendingData } from "../../services/requests";
 import SiderBar from "../../components/Sidebar";
 import Banner from "../../components/Banner";
 import Service from "../../components/Service";
 import CoinTrending from "../../components/CoinTrending";
+import NewStory from "../../components/NewStory";
+import WebView from "react-native-webview";
 
 
 const HomeScreen = () => {
   const [coins, setCoins] = useState([]);
+  const [gainers, setGainers] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const fetchCoins = async () => {
@@ -17,19 +20,9 @@ const HomeScreen = () => {
     }
     setLoading(true);
     const coinsData = await getTrendingData();
-    setCoins(coinsData.coins);
+    setCoins(coinsData);
     setLoading(false);
   };
-
-  // const refetchCoins = async () => {
-  //   if (loading) {
-  //     return;
-  //   }
-  //   setLoading(true);
-  //   const coinsData = await getTrendingData();
-  //   setCoins(coinsData);
-  //   setLoading(false);
-  // };
 
   useEffect(() => {
     fetchCoins();
@@ -40,12 +33,18 @@ const HomeScreen = () => {
       <View>
         <Banner />
         <Service />
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Trending</Text>
-          <View style={styles.btnTime}>
-            <Text style={[styles.title, { fontSize: 12 }]}>24 hour</Text>
+        {coins != null ?
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Trending</Text>
+            <View style={styles.btnTime}>
+              <Text style={[styles.title, { fontSize: 12 }]}>24 hour</Text>
+            </View>
           </View>
+          : null}
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>New Stories</Text>
         </View>
+        <NewStory />
       </View>
     );
   };
@@ -57,7 +56,7 @@ const HomeScreen = () => {
         style={{ flexGrow: 1 }}
         nestedScrollEnabled={true}
         data={coins}
-        renderItem={({ item }) => <CoinTrending marketCoin={item.item} />}
+        renderItem={({ item }) => <CoinTrending marketCoin={item} />}
         ListHeaderComponent={getHeader}
         refreshControl={
           <RefreshControl

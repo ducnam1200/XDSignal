@@ -5,6 +5,7 @@ import BottomTabNavigator from "./BottomTabNavigator";
 import AddNewAssetScreen from "../screens/AddNewAssetScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import LoginScreen from "../screens/LoginScreen";
+import TechnicalAnalysisScreen from "../screens/TechnicalAnalysisScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,11 @@ const Navigation = () => {
       <Stack.Screen
         name="CoinDetailedScreen"
         component={CoinDetailedScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="TechnicalAnalysisScreen"
+        component={TechnicalAnalysisScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

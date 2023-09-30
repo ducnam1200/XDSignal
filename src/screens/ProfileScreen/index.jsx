@@ -8,7 +8,7 @@ const ProfileScreen = () => {
 
   const navigation = useNavigation();
   const [isOpen, setIsOpen] = useState(true)
-  
+
   // useEffect(() => {
   //   isOpen ? navigation.navigate("LoginScreen") : null;
   // })
@@ -16,7 +16,7 @@ const ProfileScreen = () => {
   return (
     <ImageBackground source={require('../../../assets/bg.png')} style={styles.bg}>
       <SiderBar title={'Profile'} />
-      
+
     </ImageBackground>
   );
 };

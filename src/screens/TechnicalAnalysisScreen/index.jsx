@@ -6,7 +6,7 @@ import { ImageBackground } from "react-native";
 import SiderBarBack from "../../components/Sidebarback";
 
 
-const CoinDetailedScreen = () => {
+const TechnicalAnalysisScreen = () => {
   const route = useRoute();
   const {
     params: { coinId, name, logo },
@@ -26,7 +26,7 @@ const CoinDetailedScreen = () => {
       }
       #tv_chart_container {
           width: 100%;
-          height: 100%;
+          height: 110%;
           position: absolute;
           top: 0;
           left: 0;
@@ -38,34 +38,28 @@ const CoinDetailedScreen = () => {
     </style>
     </head>
     <body>
-      <div id="tv_chart_container"></div>
-      <script>
-        const tvChart = new TradingView.widget({
-          symbol: '${coinId}',
-          interval: 'D',
-          "timezone": "Etc/UTC",
-          theme: 'light',
-          width: '100%',
-          height: '100%',
-          style: '1',
-          theme: 'light',
-          save_image: false,
-          locale: 'en',
-          hide_side_toolbar: false,
-          toolbar_bg: '#f1f3f6',
-          container_id: 'tv_chart_container'
-        });
-        tvChart.onChartReady(function() {
-          tvChart.addCustomCSSFile('./tradingView.css')
-        })
+      <div id="tv_chart_container">
+      
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+      {
+        "interval": "1m",
+        "width": "100%",
+        "isTransparent": true,
+        "height": "100%",
+        "symbol": "${coinId}",
+        "showIntervalTabs": true,
+        "locale": "en",
+        "colorTheme": "light"
+      }
       </script>
+      </div>
     </body>
   </html> `;
 
 
   return (
     <>
-      <SiderBarBack title={name} logo={logo}/>
+      <SiderBarBack title={name} logo={logo} />
       <WebView source={{ html: htmlContent }} />
 
     </>
@@ -73,6 +67,6 @@ const CoinDetailedScreen = () => {
   );
 };
 
-export default CoinDetailedScreen;
+export default TechnicalAnalysisScreen;
 
 
