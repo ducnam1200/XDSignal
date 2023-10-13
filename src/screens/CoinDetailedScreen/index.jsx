@@ -58,6 +58,7 @@ const CoinDetailedScreen = () => {
         tvChart.onChartReady(function() {
           tvChart.addCustomCSSFile('./tradingView.css')
         })
+        document.querySelector('.tv-header__link').remove();
       </script>
     </body>
   </html> `;

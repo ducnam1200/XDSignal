@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const token = "pk_01db657b7e4841ff8ef6ce7718660a0f"
+const token = "5672068336438176c74fe1814218ea1b"
 
 export const getDetailedCoinData = async (coinId) => {
   try {
@@ -35,17 +35,7 @@ export const getMarketData = async (pageNumber = 1) => {
 export const getTrendingData = async () => {
   try {
     // const response = await axios.get(`https://api.coingecko.com/api/v3/search/trending`)
-    const response = await axios.get(`https://cloud.iexapis.com/stable/stock/market/list/mostactive?token=${token}`)
-    return response.data;
-  } catch (e) {
-    console.log(e)
-  }
-}
-
-export const getGainersData = async () => {
-  try {
-    // const response = await axios.get(`https://api.coingecko.com/api/v3/search/trending`)
-    const response = await axios.get(`https://cloud.iexapis.com/stable/stock/market/list/gainers?token=${token}`)
+    const response = await axios.get(`https://financialmodelingprep.com/api/v3/stock_market/actives?apikey=${token}`)
     return response.data;
   } catch (e) {
     console.log(e)
@@ -98,7 +88,7 @@ export const postDataGlobal = async (country) => {
       country === 'vietnam'
         ?
         {
-          "filter": [{ "left": "type", "operation": "in_range", "right": ["stock", "dr", "fund"] }, { "left": "subtype", "operation": "in_range", "right": ["common", "foreign-issuer", "", "etf", "etf,odd", "etf,otc", "etf,cfd"] }, { "left": "is_primary", "operation": "equal", "right": true }, { "left": "active_symbol", "operation": "equal", "right": true }], "options": { "data_restrictions": "PREV_BAR", "lang": "vi" }, "markets": ["vietnam"], "symbols": { "query": { "types": [], "exchanges": ["HNX", "UPCOM"] }, "tickers": [] }, "columns": ["logoid", "name", "close", "change", "change_abs", "Recommend.All", "volume", "Value.Traded", "market_cap_basic", "price_earnings_ttm", "earnings_per_share_basic_ttm", "number_of_employees", "sector", "description", "type", "subtype", "update_mode", "pricescale", "minmov", "fractional", "minmove2", "currency", "fundamental_currency_code"], "sort": { "sortBy": "market_cap_basic", "sortOrder": "desc" }, "range": [0, 150]
+          "filter": [{ "left": "type", "operation": "in_range", "right": ["stock", "dr", "fund"] }, { "left": "subtype", "operation": "in_range", "right": ["common", "foreign-issuer", "", "etf", "etf,odd", "etf,otc", "etf,cfd"] }, { "left": "is_primary", "operation": "equal", "right": true }, { "left": "active_symbol", "operation": "equal", "right": true }], "options": { "data_restrictions": "PREV_BAR", "lang": "vi" }, "markets": ["vietnam"], "symbols": { "query": { "types": [], "exchanges": ["HOSE", "HNX", "UPCOM"] }, "tickers": [] }, "columns": ["logoid", "name", "close", "change", "change_abs", "Recommend.All", "volume", "Value.Traded", "market_cap_basic", "price_earnings_ttm", "earnings_per_share_basic_ttm", "number_of_employees", "sector", "description", "type", "subtype", "update_mode", "pricescale", "minmov", "fractional", "minmove2", "currency", "fundamental_currency_code"], "sort": { "sortBy": "market_cap_basic", "sortOrder": "desc" }, "range": [0, 150]
 
         }
         : country === 'america'
@@ -156,3 +146,38 @@ export const getNewStory = async () => {
     console.log(e);
   }
 }
+
+export const getDataForexs = async (date, status) => {
+  try {
+    const response = await axios.get(`https://musicappandroid1200.000webhostapp.com/login/listForex.php?search_date=${date}&status=${status}`)
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export const postLogin = async (formdata) => {
+  try {
+    const response = await axios.post(`https://musicappandroid1200.000webhostapp.com/login/login.php`,
+      formdata, {
+      headers: {
+        "Content-type": "multipart/form-date"
+      }
+    })
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export const getDataPrice = async (symbol) => {
+  try {
+    const response = await axios.get(`https://api.twelvedata.com/price?symbol=${symbol}&apikey=1ce947f382684049b5fe5b83b7d4f8c4`)
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+
+

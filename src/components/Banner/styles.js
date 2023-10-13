@@ -4,11 +4,7 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     width: '100%',
-    height: 130,
-    marginTop: 20,
-    paddingLeft: 16,
-    paddingRight: 16,
-    marginBottom: 24,
+    height: 100,
   },
 
   banner: {
@@ -28,7 +24,7 @@ const styles = StyleSheet.create({
   },
 
   titleBanner: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "500",
     color: '#FFF',
     textTransform: 'uppercase',

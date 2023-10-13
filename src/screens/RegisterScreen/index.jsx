@@ -8,14 +8,19 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
 
   const navigation = useNavigation();
   const sheetRef = useRef(null)
   const [error, setError] = useState(null);
   const [valueUserName, setValueUserName] = useState(null);
+  const [valueFullName, setValueFullName] = useState(null);
   const [valuePassword, setValuePassword] = useState(null);
   const snapPoint = ["90%"]
+
+  const onChangeTextFullName = (val) => {
+    setValueFullName(val)
+  }
 
   const onChangeText = (val) => {
     setValueUserName(val)
@@ -25,12 +30,13 @@ const LoginScreen = () => {
     setValuePassword(val)
   }
 
-  const login = async () => {
+  const register = async () => {
     const formData = new FormData();
+    formData.append("full_name", valueFullName);
     formData.append("user_name", valueUserName);
     formData.append("password", valuePassword);
 
-    fetch("https://musicappandroid1200.000webhostapp.com/login/login.php", {
+    fetch("https://musicappandroid1200.000webhostapp.com/login/register.php", {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -41,7 +47,7 @@ const LoginScreen = () => {
       .then(res => res.json())
       .then(json => {
         json.status === true ?
-          (AsyncStorage.setItem('data', JSON.stringify(json.data)), AsyncStorage.setItem('username', json.data.user_name), alert(json.message), navigation.navigate("Home"))
+          (alert(json.message), navigation.navigate("LoginScreen"))
           : setError(json.message)
       })
       .catch(error => {
@@ -67,7 +73,16 @@ const LoginScreen = () => {
             </Pressable>
           </View>
           <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', paddingHorizontal: 16 }}>
-            <Text style={styles.title}>Login</Text>
+            <Text style={styles.title}>Register</Text>
+            <Text style={styles.txtInput}>
+              Full Name
+            </Text>
+            <TextInput
+              placeholder={'John Lee'}
+              onChangeText={val => onChangeTextFullName(val)}
+              style={styles.input}
+              placeholderTextColor={'rgba(191,191,191,0.5)'}
+            />
             <Text style={styles.txtInput}>
               User Name
             </Text>
@@ -93,9 +108,7 @@ const LoginScreen = () => {
               </Text>
               : null}
             <Pressable style={styles.button}
-              onPress={() => (
-                login()
-              )}>
+              onPress={register}>
               <Text style={styles.text}>Continue</Text>
             </Pressable>
             <View style={styles.or}>
@@ -105,23 +118,9 @@ const LoginScreen = () => {
             </View>
 
             <Pressable style={[styles.button, { backgroundColor: 'rgba(255,255,255,0.1)', marginVertical: 0, marginBottom: 10 }]}
-              onPress={() => navigation.navigate("RegisterScreen")}>
-              <Text style={styles.text}>Register</Text>
+              onPress={() => navigation.navigate("LoginScreen")}>
+              <Text style={styles.text}>Login</Text>
             </Pressable>
-
-            <View style={[styles.input, { justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row', marginBottom: 10 }]}>
-              <Image source={require('../../../assets/gg.png')} style={{ width: 30, height: 30 }} />
-              <View style={{ width: '90%', alignItems: 'center' }}>
-                <Text style={styles.text}>Continue with Google</Text>
-              </View>
-            </View>
-
-            <View style={[styles.input, { justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }]}>
-              <Image source={require('../../../assets/fb.png')} style={{ width: 30, height: 30 }} />
-              <View style={{ width: '90%', alignItems: 'center' }}>
-                <Text style={styles.text}>Continue with Facebook</Text>
-              </View>
-            </View>
           </View>
         </BottomSheetView>
       </BottomSheet>
@@ -129,4 +128,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;

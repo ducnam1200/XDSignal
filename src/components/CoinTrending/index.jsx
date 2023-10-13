@@ -8,11 +8,10 @@ import { AntDesign } from "@expo/vector-icons";
 
 const CoinTrending = ({ marketCoin }) => {
   const {
-    id,
-    companyName,
-    changePercent,
+    name,
+    changesPercentage,
     symbol,
-    iexRealtimePrice,
+    price,
   } = marketCoin;
 
   const navigation = useNavigation();
@@ -42,10 +41,10 @@ const CoinTrending = ({ marketCoin }) => {
   return (
     <Pressable
       style={styles.coinContainer}
-      onPress={() => navigation.navigate("CoinDetailedScreen", { coinId: symbol, logo: logos })}
+      onPress={() => navigation.navigate("CoinDetailedScreen", { coinId: symbol, name: symbol })}
     >
 
-      <Image
+      {/* <Image
         source={{ uri: logos.url }}
         style={{
           height: 30,
@@ -53,15 +52,15 @@ const CoinTrending = ({ marketCoin }) => {
           marginRight: 10,
           alignSelf: "center",
         }}
-      />
+      /> */}
       <View>
         <Text style={styles.title}>{symbol}</Text>
-        <Text style={styles.text}>{companyName != null ? companyName.toUpperCase() : null}</Text>
+        <Text style={styles.text}>{name?.toUpperCase()}</Text>
       </View>
       <View style={{ marginLeft: "auto", alignItems: "flex-end" }}>
-        <Text style={styles.title}>{iexRealtimePrice} USD</Text>
-        <View style={[styles.rankContainer, { backgroundColor: changePercent < 0 ? "#ea3943" : "#16c784" || "white" }]}>
-          <Text style={styles.rank}>{changePercent != null ? (changePercent*100)?.toFixed(2) : 0}%</Text>
+        <Text style={styles.title}>{price} USD</Text>
+        <View style={[styles.rankContainer, { backgroundColor: changesPercentage < 0 ? "#ea3943" : "#16c784" || "white" }]}>
+          <Text style={styles.rank}>{changesPercentage != null ? changesPercentage?.toFixed(2) : 0}%</Text>
         </View>
       </View>
     </Pressable>

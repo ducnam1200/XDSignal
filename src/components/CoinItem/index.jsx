@@ -1,20 +1,50 @@
 import React, { useState } from "react";
 import { Text, View, Pressable } from "react-native";
-import { Entypo, AntDesign } from "@expo/vector-icons";
+import { Entypo, AntDesign, Feather } from "@expo/vector-icons";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import { SvgUri } from 'react-native-svg';
 import Modal from 'react-native-modal'
+import { Image } from "react-native";
 
-const CoinItem = ({ marketCoin }) => {
+const CoinItem = ({ marketCoin, priceAction }) => {
   const {
-    s, d
+    name_forex,
+    vip,
+    status,
+    action,
+    open_time,
+    open_price,
+    take_profit_1,
+    take_profit_2,
+    take_profit_3,
+    stop_loss,
+    profit_and_loss,
+    trade_result,
+    last_update_time,
+    comment
   } = marketCoin;
 
   const navigation = useNavigation();
 
   const percentageColor =
-    d[3] < 0 ? "#ea3943" : "#16c784" || 'white';
+    action === "0" ? "#ea3943" : "#16c784"
+
+  const percentageTech =
+    action === "0" ? "Sell" : "Buy"
+
+  const percentageIcon =
+    action === "1" ? <Entypo name="chevron-small-up" size={24} color="#16c784" /> : <Entypo name="chevron-small-down" size={24} color="#ea3943" />;
+
+
+  const percentageMarket =
+    status === "1" ? "#C5C5C5" : "#16c784";
+
+  const percentageStatus =
+    status === "1" ? "Expired" : "Active";
+
+  const percentageStatusColor =
+    trade_result === "Stop loss" ? "#ea3943" : "#16c784" || "#C5C5C5";
 
   const normalizeMarketCap = (marketCap) => {
     if (marketCap > 1e12) {
@@ -32,93 +62,52 @@ const CoinItem = ({ marketCoin }) => {
     return marketCap;
   };
 
-  const [visibleModal, setVisibleModal] = useState('')
-
   return (
     <>
       <Pressable
         style={styles.coinContainer}
-        onPress={() => setVisibleModal(1)}
+        onPress={() => navigation.navigate('CoinDetail', {
+          name_forex: name_forex,
+          status: status,
+          action: action,
+          open_time: open_time,
+          open_price: open_price,
+          take_profit_1: take_profit_1,
+          take_profit_2: take_profit_2,
+          take_profit_3: take_profit_3,
+          stop_loss: stop_loss,
+          profit_and_loss: profit_and_loss,
+          trade_result: trade_result,
+          last_update_time: last_update_time,
+          comment: comment,
+          priceAction: priceAction
+        })}
       >
 
-        <View style={{ display: 'flex', flexDirection: 'row', width: "15%", alignItems: 'center' }}>
-          {d[0] != '' ?
-            <View style={{ marginRight: 4, marginTop: 2 }}>
-              <SvgUri
-                width="18"
-                height="18"
-                uri={`https://s3-symbol-logo.tradingview.com/${d[0]}.svg`}
-              />
-            </View>
-            :
-            <View style={{ marginRight: 4, marginTop: 2 }}>
-              <View style={styles.containerSvg}>
-                <Text style={[styles.title, { color: "#C5C5C5", fontSize: 12 }]}>{d[1][0]}</Text>
-              </View>
-            </View>}
-          <Text numberOfLines={2} ellipsizeMode="tail" style={[styles.title, { fontSize: 14, color: '#2962ff', width: "60%" }]}>{d[1]}</Text>
+        <View style={{ display: 'flex', flexDirection: 'column', width: "30%", alignItems: 'flex-start', }}>
+          <Text style={[styles.title, { fontSize: 20, color: '#2962ff' }]}>{name_forex}</Text>
+          <Text style={[styles.title, { fontSize: 10, color: '#fff' }]}>{open_time}</Text>
         </View>
 
-        <View style={{ display: 'flex', flexDirection: 'row', width: "15%", alignItems: 'center' }}>
-          <Text style={[styles.title, { fontSize: 10 }]}>{d[2]}</Text>
-          <Text style={[styles.title, { color: "#C5C5C5", fontSize: 8, marginLeft: 2 }]}>{d[21]}</Text>
+        <View style={{ width: "10%", alignItems: 'center', }}>
+          <Text style={[styles.title, { fontSize: 18, color: "#fff" }]}>{vip === 1 ? "VIP" : vip === 2 ? "Person" : ""}</Text>
         </View>
-        <View style={{ width: "10%", alignItems: 'center' }}>
-          <Text style={[styles.title, { fontSize: 10, color: percentageColor }]}>{d[3]?.toFixed(2)}%</Text>
-        </View>
-        <View style={{ width: "15%", alignItems: 'center' }}>
-          <Text style={[styles.title, { fontSize: 10 }]}>{normalizeMarketCap(d[6])}</Text>
-        </View>
-        <View style={{ width: "15%", alignItems: 'center' }}>
-          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end' }}>
-            <Text style={[styles.title, { fontSize: 10 }]}>{normalizeMarketCap(d[8])}</Text>
-            <Text style={[styles.title, { color: "#C5C5C5", fontSize: 8, marginLeft: 2 }]}>{d[22]}</Text>
+
+        <View style={{ width: "30%", alignItems: 'center' }}>
+          <View style={{ display: 'flex', flexDirection: 'row' }}>
+            <Text style={[styles.title, { fontSize: 18, color: percentageMarket }]}>{percentageStatus}</Text>
+            {status === "0" ? <Image style={styles.action} source={require('../../../assets/gif/loading.gif')} /> : null}
           </View>
+          <Text style={[styles.title, { fontSize: 18, color: percentageStatusColor }]}>{trade_result === "Waiting" ? (priceAction > take_profit_1 ? "TP-1" : trade_result) : trade_result === "TP-1" ? (priceAction > take_profit_2 ? "TP-2" : "TP-1") : trade_result === "TP-2" ? (priceAction > take_profit_3 ? "TP-3" : "TP-2") : trade_result}</Text>
         </View>
-        <View style={{ width: "15%", alignItems: 'center' }}>
-          {d[9] != null
-            ? <Text style={[styles.title, { fontSize: 10 }]}>{d[9].toFixed(2)}</Text>
-            : <Entypo name="minus" size={12} color="#fff" />
-          }
-        </View>
-        <View style={{ width: "15%", alignItems: 'center' }}>
-          {d[10] != null
-            ?
-            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end' }}>
-              <Text style={[styles.title, { fontSize: 10 }]}>{d[10].toFixed(2)}</Text>
-              <Text style={[styles.title, { color: "#C5C5C5", fontSize: 8, marginLeft: 2 }]}>{d[22]}</Text>
-            </View>
-            : <Entypo name="minus" size={12} color="#fff" />
-          }
+
+        <View style={{ width: "30%", alignItems: 'flex-end', justifyContent: 'flex-end', flexDirection: 'row', display: 'flex' }}>
+          {percentageIcon}
+          <Text style={[styles.title, { fontSize: 18, color: percentageColor, marginLeft: 2 }]}>
+            {percentageTech}
+          </Text>
         </View>
       </Pressable>
-      <Modal isVisible={visibleModal === 1} style={styles.bottomModal}>
-        <View style={styles.selectInfo}>
-          <Pressable
-            style={[styles.btnClose, { marginVertical: 10 }]}
-            onPress={() => setVisibleModal('')}
-          >
-            <AntDesign name="closecircle" size={20} color="black" />
-          </Pressable>
-          <Pressable
-            style={[styles.btnChart, { marginBottom: 10 }]}
-            onPress={() => (
-              navigation.navigate("CoinDetailedScreen", { coinId: s, name: d[1], logo: d[0] }), setVisibleModal('')
-            )}
-          >
-            <Text style={styles.txt}>Show Chart</Text>
-          </Pressable>
-
-          <Pressable
-            style={styles.btnChart}
-            onPress={() => (
-              navigation.navigate("TechnicalAnalysisScreen", { coinId: s, name: d[1], logo: d[0] }), setVisibleModal('')
-            )}
-          >
-            <Text style={styles.txt}>Show Technical Analysis</Text>
-          </Pressable>
-        </View>
-      </Modal>
     </>
 
 

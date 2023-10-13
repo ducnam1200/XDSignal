@@ -1,18 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
-import WatchlistScreen from "../screens/WatchlistScreen";
 import PortfolioScreen from "../screens/PortfolioScreen";
 import { Entypo, FontAwesome, AntDesign, MaterialIcons, Feather } from "@expo/vector-icons";
 import ListScreen from "../screens/ListScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
   const navigation = useNavigation();
+
+  const [getValue, setGetValue] = useState(null)
+
+  const getValueFunction = (key) => {
+    AsyncStorage.getItem(key).then(
+      (value) =>
+        setGetValue(value)
+    );
+  };
+
+  useEffect(() => {
+    getValueFunction('username');
+    setTimeout(() => getValueFunction('username'), 3000)
+  }, []);
 
   return (
     <Tab.Navigator
@@ -43,18 +57,8 @@ const BottomTabNavigator = () => {
           ),
         }}
       />
-      {/* <Tab.Screen
-        name="Portfolio"
-        component={PortfolioScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused, color }) => (
-            <Foundation name="graph-pie" size={25} color={focused ? '#fff' : '#787878'} />
-          ),
-        }}
-      /> */}
       <Tab.Screen
-        name="Item"
+        name="New"
         component={ListScreen}
         options={{
           headerShown: false,
@@ -78,10 +82,11 @@ const BottomTabNavigator = () => {
           headerShown: false,
           tabBarIcon: ({ color, focused }) => <Feather name="user" color={focused ? '#fff' : '#787878'} size={20} />,
           tabBarButton: props => (
-            <TouchableOpacity {...props} onPress={() => navigation.navigate("LoginScreen")} />
+            <TouchableOpacity {...props} onPress={() => getValue === null ? navigation.navigate("LoginScreen") : navigation.navigate("Profile")} />
           ),
         }}
-        name="Profile" component={ProfileScreen} />
+        name="Profile"
+        component={ProfileScreen} />
     </Tab.Navigator>
   );
 };

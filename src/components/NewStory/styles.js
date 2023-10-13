@@ -4,15 +4,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1, flexDirection: 'row', margin: 1,
     justifyContent: 'center',
-    marginVertical: 10
-
+    marginVertical: 12,
+    marginHorizontal: 20
   },
   containerStoryLeft: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    width: '70%'
+    width: '80%'
   },
   containerStoryRight: {
     display: 'flex',
@@ -40,7 +40,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2F2F2',
     display: 'flex',
     alignItems: 'flex-start',
-  }
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    marginTop: 10
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#fff',
+    fontFamily: 'DroidSans'
+  },
 });
 
 export default styles;

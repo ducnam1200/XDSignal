@@ -15,9 +15,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: "#282828",
-    paddingBottom: 10,
-    paddingTop: 10,
-    padding: 2,
+    paddingVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
@@ -77,6 +75,10 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'flex-end'
+  },
+  action: {
+    width: 23,
+    height: 30
   }
 });
 

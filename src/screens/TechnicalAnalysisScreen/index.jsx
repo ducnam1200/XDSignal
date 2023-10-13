@@ -49,7 +49,7 @@ const TechnicalAnalysisScreen = () => {
         "symbol": "${coinId}",
         "showIntervalTabs": true,
         "locale": "en",
-        "colorTheme": "light"
+        "colorTheme": "light",
       }
       </script>
       </div>
@@ -61,7 +61,6 @@ const TechnicalAnalysisScreen = () => {
     <>
       <SiderBarBack title={name} logo={logo} />
       <WebView source={{ html: htmlContent }} />
-
     </>
 
   );
