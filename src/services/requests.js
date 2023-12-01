@@ -156,6 +156,15 @@ export const getDataForexs = async (date, status) => {
   }
 }
 
+export const getDataMemberId = async (id) => {
+  try {
+    const response = await axios.get(`https://musicappandroid1200.000webhostapp.com/login/listMember.php?id=${id}`)
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 export const postLogin = async (formdata) => {
   try {
     const response = await axios.post(`https://musicappandroid1200.000webhostapp.com/login/login.php`,
@@ -178,6 +187,43 @@ export const getDataPrice = async (symbol) => {
     console.log(e);
   }
 }
+
+export const sendNotification = async (text) => {
+  const telegramBotKey = "6805060485:AAHQVxO5cYmdGsExe-lbyjPT4pHV8ayg1f0";
+  const chat_id = "@testsendtele";
+
+  const endpoint = `https://api.telegram.org/bot${telegramBotKey}/sendMessage`;
+  try {
+    const response = await axios.post(endpoint, {
+      chat_id: chat_id,
+      parse_mode: 'html',
+      text: text
+    })
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getPriceQuote = async (symbol) => {
+  try {
+    const response = await axios.get(`https://research.tradermade.com/api/v1/live?currency=${symbol}`)
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export const getPriceQuoteUser = async (id_user, id_default) => {
+  try {
+    const response = await axios.get(`https://musicappandroid1200.000webhostapp.com/login/listQuoteUser.php?id_user=${id_user}&id_default=${id_default}`)
+    return response.data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+
 
 
 

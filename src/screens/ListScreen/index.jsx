@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, ImageBackground } from "react-native";
+import { StyleSheet, View } from "react-native";
 import SiderBar from "../../components/Sidebar";
 import SelectGlobal from "../../components/SelectGlobal";
 import NewStory from "../../components/NewStory";
@@ -7,10 +7,10 @@ import NewStory from "../../components/NewStory";
 
 const ListScreen = () => {
   return (
-    <ImageBackground source={require('../../../assets/bg.png')} style={styles.bg}>
+    <View style={styles.bg}>
       <SiderBar title={'New story'} />
       <NewStory/>
-    </ImageBackground>
+    </View>
   );
 };
 

@@ -6,9 +6,12 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { FIREBASE_AUTH } from "../../../firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const RegisterScreen = () => {
+
+  const auth = FIREBASE_AUTH;
 
   const navigation = useNavigation();
   const sheetRef = useRef(null)
@@ -31,29 +34,36 @@ const RegisterScreen = () => {
   }
 
   const register = async () => {
-    const formData = new FormData();
-    formData.append("full_name", valueFullName);
-    formData.append("user_name", valueUserName);
-    formData.append("password", valuePassword);
 
-    fetch("https://musicappandroid1200.000webhostapp.com/login/register.php", {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-      body: formData,
-    })
-      .then(res => res.json())
-      .then(json => {
-        json.status === true ?
-          (alert(json.message), navigation.navigate("LoginScreen"))
-          : setError(json.message)
-      })
-      .catch(error => {
-        setError(error.message)
-      });
+    const email = valueUserName === null ? null : valueUserName + "@gmail.com";
+    if (valueFullName && email && valuePassword) {
+      try {
 
+        await createUserWithEmailAndPassword(auth, email, valuePassword);
+
+        const formData = new FormData();
+        formData.append("full_name", valueFullName);
+        formData.append("user_name", valueUserName);
+        formData.append("password", valuePassword);
+
+        await fetch("https://musicappandroid1200.000webhostapp.com/login/register.php", {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+          body: formData,
+        })
+          .then(res => res.json())
+          .then(json => {
+            json.status === true ?
+              (alert(json.message), navigation.navigate("LoginScreen"))
+              : setError(json.message)
+          })
+      } catch (e) {
+        setError("Please check your form and try again")
+      }
+    }
   };
 
 

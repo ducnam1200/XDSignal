@@ -1,16 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, ImageBackground, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, Image, ActivityIndicator } from "react-native";
 import SiderBar from "../../components/Sidebar";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import i18n from "../../../i18n";
+import { useTranslation } from "react-i18next";
+import SiderBarBack from "../../components/Sidebarback";
+import moment from "moment";
+import { MaterialIcons } from '@expo/vector-icons';
+import UpdateProfile from "../../components/UpdateProfile";
+import SearchMember from "../../components/SearchMember";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const ProfileScreen = () => {
 
   const navigation = useNavigation();
-  const [isOpen, setIsOpen] = useState(true)
 
   const [getValue, setGetValue] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [nameHome, setNameHome] = useState("Signal free")
+
+  const { t } = useTranslation();
 
   const getValueFunction = (key) => {
     AsyncStorage.getItem(key).then(
@@ -20,10 +30,20 @@ const ProfileScreen = () => {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => getValueFunction('data'), 3000);
+    const interval = setInterval(() => {
+      getValueFunction('data');
+      setNameHome(getValue?.vip === "1" ? t("Signal admin") : getValue?.vip === "2" ? t("Signal vip") : t("Signal free"));
+      setLoading(true)
+    }
+      , 3000);
     return () => {
       clearInterval(interval);
     };
+  }, [getValue?.vip]);
+
+  useEffect(() => {
+    getValueFunction('data');
+    setNameHome(getValue?.vip === "1" ? t("Signal admin") : getValue?.vip === "2" ? t("Signal vip") : t("Signal free"));
   }, []);
 
   const removeItemValue = async (key) => {
@@ -36,57 +56,79 @@ const ProfileScreen = () => {
     }
   }
 
+  const changeLanguage = value => {
+    i18n
+      .changeLanguage(value)
+      .then(() => null)
+      .catch(err => console.log(err));
+  };
+
   return (
-    <ImageBackground source={require('../../../assets/bg.png')} style={styles.bg}>
-      <SiderBar title={'Profile'} />
-      <View style={styles.container}>
-        <View style={styles.containerProfile}>
-          <View style={styles.containerTxt}>
-            <Text style={styles.txt}>User name:</Text>
-            <Text style={styles.txt}>{getValue?.user_name}</Text>
+    <GestureHandlerRootView style={{ flex: 2 }} keyboardVerticalOffset={80} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View style={styles.bg}>
+        <SiderBarBack title={'Profile'} />
+        <View style={styles.container}>
+          <View style={styles.containerProfile}>
+            <View style={styles.containerTxt}>
+              <Text style={styles.txt}>{t('userName')}</Text>
+              <Text style={styles.txt}>{getValue?.user_name}</Text>
+            </View>
+            <View style={styles.containerTxt}>
+              <Text style={styles.txt}>{t('fullName')}</Text>
+              <Text style={styles.txt}>{getValue?.full_name}</Text>
+            </View>
+            <View style={styles.containerTxt}>
+              <Text style={styles.txt}>{t('email')}</Text>
+              <Text style={styles.txt}>{getValue?.email === '' || getValue?.email === null ? <MaterialIcons name="error-outline" size={24} color="#C51605" /> : getValue?.email}</Text>
+            </View>
+            <View style={styles.containerTxt}>
+              <Text style={styles.txt}>{t('phone')}</Text>
+              <Text style={styles.txt}>{getValue?.phone === '' || getValue?.phone === null ? <MaterialIcons name="error-outline" size={24} color="#C51605" /> : getValue?.phone}</Text>
+            </View>
+            <View style={styles.containerTxt}>
+              <Text style={styles.txt}>{t('province')}</Text>
+              <Text style={styles.txt}>{getValue?.province === '' || getValue?.province === null ? <MaterialIcons name="error-outline" size={24} color="#C51605" /> : getValue?.province}</Text>
+            </View >
+            <View style={styles.containerTxt}>
+              <Text style={styles.txt}>{t('nation')}</Text>
+              <Text style={styles.txt}>{getValue?.nation === '' || getValue?.nation === null ? <MaterialIcons name="error-outline" size={24} color="#C51605" /> : getValue?.nation}</Text>
+            </View>
+            <View style={styles.containerTxt}>
+              <Text style={styles.txt}>{t('status')}</Text>
+              <Text style={styles.txt}>{getValue?.status === "1" ? "Active" : "Not active"}</Text>
+            </View>
+            <View style={styles.containerTxt}>
+              <Text style={styles.txt}>{t('Last update time')} :</Text>
+              <Text style={styles.txt}>{moment(getValue?.update_time).format("DD MMM YYYY")}</Text>
+            </View>
+
           </View>
-          <View style={styles.containerTxt}>
-            <Text style={styles.txt}>Full name</Text>
-            <Text style={styles.txt}>{getValue?.full_name}</Text>
-          </View>
-          <View style={styles.containerTxt}>
-            <Text style={styles.txt}>Status:</Text>
-            <Text style={styles.txt}>{getValue?.vip === "1" ? "VIP" : "FREE"}</Text>
-          </View>
+          <Pressable
+            style={{
+              backgroundColor: '#ea3943',
+              marginTop: 20,
+              paddingHorizontal: 20,
+              paddingVertical: 10,
+              borderRadius: 6
+            }}
+            onPress={() => loading && (removeItemValue("username"), removeItemValue("data"), changeLanguage('en'), navigation.navigate(nameHome))}>
+            {loading ? <Text style={[styles.txt, { color: "#fff" }]}>{t('logout')}</Text> : <ActivityIndicator size={'large'} />}
+
+          </Pressable>
+          <UpdateProfile getValue={getValue} update_time={moment(new Date()).format("YYYY-MM-DD")} />
+          <SearchMember />
+
         </View>
 
-        <Pressable
-          style={{
-            backgroundColor: '#FFCD4B',
-            marginTop: 20,
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-            borderRadius: 6
-          }}
-          onPress={() => (removeItemValue("username"), navigation.navigate("Home"))}>
-          <Text style={[styles.txt, { color: "#fff" }]}>ACCOUNT RENEWAL</Text>
-        </Pressable>
-
-        <Pressable
-          style={{
-            backgroundColor: '#ea3943',
-            marginTop: 20,
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-            borderRadius: 6
-          }}
-          onPress={() => (removeItemValue("username"), navigation.navigate("Home"))}>
-          <Text style={[styles.txt, { color: "#fff" }]}>LOGOUT</Text>
-        </Pressable>
       </View>
 
-    </ImageBackground>
+    </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
   bg: {
-    flex: 1,
+    // flex: 1,
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
@@ -95,8 +137,9 @@ const styles = StyleSheet.create({
   },
   container: {
     width: "100%",
+    height: "100%",
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     flexDirection: 'column',
     padding: 10,
@@ -108,9 +151,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: '#fff',
     borderRadius: 6,
-    padding: 14,
+    paddingHorizontal: 14,
     gap: 20,
   },
   containerTxt: {
@@ -123,7 +165,9 @@ const styles = StyleSheet.create({
   txt: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#000'
+    color: '#fff',
+    fontFamily: 'DroidSans'
+
   }
 
 });

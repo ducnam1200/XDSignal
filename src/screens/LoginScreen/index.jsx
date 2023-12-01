@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, Text, TextInput, Pressable, Platform, Image } from "react-native";
 import styles from "./styles";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet"
@@ -6,6 +6,9 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FIREBASE_AUTH, FIREBASE_DBR } from "../../../firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { ref, set } from "firebase/database";
 
 
 const LoginScreen = () => {
@@ -17,6 +20,9 @@ const LoginScreen = () => {
   const [valuePassword, setValuePassword] = useState(null);
   const snapPoint = ["90%"]
 
+  const auth = FIREBASE_AUTH;
+
+
   const onChangeText = (val) => {
     setValueUserName(val)
   }
@@ -26,28 +32,35 @@ const LoginScreen = () => {
   }
 
   const login = async () => {
-    const formData = new FormData();
-    formData.append("user_name", valueUserName);
-    formData.append("password", valuePassword);
 
-    fetch("https://musicappandroid1200.000webhostapp.com/login/login.php", {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-      body: formData,
-    })
-      .then(res => res.json())
-      .then(json => {
-        json.status === true ?
-          (AsyncStorage.setItem('data', JSON.stringify(json.data)), AsyncStorage.setItem('username', json.data.user_name), alert(json.message), navigation.navigate("Home"))
-          : setError(json.message)
-      })
-      .catch(error => {
-        setError(error.message)
-      });
+    const email = valueUserName === null ? null : valueUserName + "@gmail.com";
+    if (email && valuePassword) {
+      try {
 
+        await signInWithEmailAndPassword(auth, email, valuePassword);
+
+        const formData = new FormData();
+        formData.append("user_name", valueUserName);
+        formData.append("password", valuePassword);
+
+        fetch("https://musicappandroid1200.000webhostapp.com/login/login.php", {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+          body: formData,
+        })
+          .then(res => res.json())
+          .then(json => {
+            json.status === true ?
+              (AsyncStorage.setItem('data', JSON.stringify(json.data)), AsyncStorage.setItem('notiSetup', "1"), alert(json.message), navigation.navigate("Signal free"))
+              : setError(json.message)
+          })
+      } catch (e) {
+        setError("Please check your form and try again")
+      }
+    }
   };
 
 

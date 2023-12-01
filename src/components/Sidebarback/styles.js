@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     width: '100%',
-    height: 42,
+    height: 58,
     marginTop: 40,
     paddingLeft: 16,
     paddingRight: 16,
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 22,
+    fontSize: 18,
     color: '#fff',
     fontFamily: 'DroidSans'
   },
@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     width: 60,
-    justifyContent: 'space-between'
+    justifyContent: 'flex-end',
+    gap: 10
   },
   containerCoin: {
     display: 'flex',

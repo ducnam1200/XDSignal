@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
   coinContainer: {
     paddingHorizontal: 20,
-    paddingVertical: 40,
+    paddingVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
@@ -72,7 +72,44 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: '#fff'
-  }
+  },
+  viewBtn: {
+    position: 'absolute',
+    bottom: 4,
+    right: 4,
+    height: 50,
+    width: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewBtnChart: {
+    position: 'absolute',
+    bottom: 4,
+    right: 46,
+    height: 50,
+    width: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewBtnAnalysis: {
+    position: 'absolute',
+    bottom: 4,
+    right: 88,
+    height: 50,
+    width: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btn: {
+    height: 35,
+    width: 35,
+    backgroundColor: "#39A7FF",
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+    borderColor: "#C5C5C5",
+    borderWidth: 0.5
+  },
 });
 
 export default styles;

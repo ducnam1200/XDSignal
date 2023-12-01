@@ -13,6 +13,7 @@ import { A } from '@expo/html-elements';
 import StockTrend from '../StockTrend';
 import Banner from '../Banner';
 import Service from '../Service';
+import { timeAgo } from '../../utils/commonUtils';
 
 export default function NewStory() {
 
@@ -36,31 +37,13 @@ export default function NewStory() {
 
   const data = stories.items
 
-  const timeAgo = (prevDate) => {
-    const diff = Number(new Date().getTime()) - prevDate;
-    const minute = 60 * 1000;
-    const hour = minute * 60;
-    const day = hour * 24;
-    const month = day * 30;
-    const year = day * 365;
-    switch (true) {
-      case diff < minute:
-        const seconds = Math.round(diff / 1000);
-        return `${seconds} ${seconds > 1 ? 'seconds' : 'second'} ago`
-      case diff < hour:
-        return Math.round(diff / minute) + ' minutes ago';
-      case diff < day:
-        return Math.round(diff / hour) + ' hours ago';
-      case diff < month:
-        return Math.round(diff / day) + ' days ago';
-      case diff < year:
-        return Math.round(diff / month) + ' months ago';
-      case diff > year:
-        return Math.round(diff / year) + ' years ago';
-      default:
-        return "";
-    }
-  };
+  const getHeader = () => {
+    return (
+      <View style={{ width: "100%", display: 'flex', alignItems: "center", paddingHorizontal: 15, paddingTop: 6 }}>
+        <Banner />
+      </View>
+    )
+  }
 
   return (
     <FlatList
@@ -96,6 +79,7 @@ export default function NewStory() {
       )}
       numColumns={1}
       keyExtractor={(item, index) => index}
+      ListHeaderComponent={getHeader}
     />
   )
 };

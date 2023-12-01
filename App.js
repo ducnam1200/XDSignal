@@ -22,7 +22,7 @@ export default function App() {
     <NavigationContainer
       theme={{
         colors: {
-          background: "#12121C",
+          background: "#0F0F0F",
         },
       }}
     >
@@ -39,6 +39,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#12121C",
+    backgroundColor: "#0F0F0F",
   },
 });
